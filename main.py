@@ -5,13 +5,14 @@
 # ---- License ----
 # MIT LICENSE
 
-
 from tkinter import *
+import re
 import sys
 import os
 from dotenv import load_dotenv, find_dotenv
 import requests
 import json
+import time
 
 load_dotenv(find_dotenv('.env_vars'))
 
@@ -30,6 +31,16 @@ class color:
 
 
 buttonClicked = False
+
+tag_removal = re.compile(r'<[^>]+>')
+output = ''
+
+def remove_tags(text):
+	global tag_removal
+	global output
+
+	output = tag_removal.sub('', text)
+
 
 
 def give_hadith():
@@ -57,14 +68,19 @@ def give_hadith():
 		if buttonClicked is True:
 			SmartHadithText.config(state=NORMAL)
 			SmartHadithText.delete('1.0', 'end')
-			SmartHadithText.insert(INSERT, thehadith[0]['body'].strip("<b></b><p></p><br/><br/><b></b>.<br/><br"))
-			print(thehadith[0]['body'].strip("<b></b><p></p><br/><br/><b></b>.<br/><br") + color.BOLD + '\n --- WORKING STATUS CODE 200 ---' + color.END)
+			remove_tags(thehadith[0]['body']) 
+			SmartHadithText.insert(INSERT, output)
+			print(str(output) + color.BOLD + '\n --- WORKING STATUS CODE 200 ---' + color.END)
 			SmartHadithText.config(state=DISABLED)
 	except:
 		print(color.BOLD + color.RED + 'Error has occurred' + color.END)
 
 	collectionLabel.config(text=f"Collection - {collection}")
 	hadithNumLabel.config(text=f"Hadith Number - {hadithnumber}")
+
+
+def timed_hadith():
+	return
 
 
 def clear_page():
@@ -111,6 +127,7 @@ SmartHadithText = Text(
 	borderwidth=1,
 	state=DISABLED
 	)
+
 SmartHadithText.place(x=380, y=300)
 
 
