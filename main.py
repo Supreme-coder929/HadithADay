@@ -8,12 +8,10 @@
 
 from tkinter import *
 import sys
-import threading
 import os
 from dotenv import load_dotenv, find_dotenv
 import requests
 import json
-import time
 
 load_dotenv(find_dotenv('.env_vars'))
 
